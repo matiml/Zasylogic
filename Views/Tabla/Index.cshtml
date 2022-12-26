@@ -1,0 +1,142 @@
+﻿@using System.Web.Helpers
+
+    
+@model Cliente[]
+
+  
+@{
+    ViewData["Title"] = "Tabla";
+    Layout = "_Layout";
+}
+
+<head>
+
+<title>Tabla de clientes</title>
+    <meta http-equiv="refresh" content="30">
+</head>
+<div class="body-table">
+
+
+<h3 >Listado de clientes atendidos</h3>
+
+<form action="POST" class="date">
+    <input type="date" id="startDate">
+    <input type="date" id="endDate">
+
+
+    <button type="submit" id="open_modal2">done</button>
+</form>
+
+
+<table id="tablaClientes" class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Sexo</th>
+            <th>Motivo</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Cliente in Model)
+        {
+            <tr>
+                <td>@Cliente.Nombre</td>
+                <td>@Cliente.Apellidos</td>
+                <td>@Cliente.Telefono</td>
+                <td>@Cliente.Email</td>
+                 <td>@Cliente.Sexo</td>
+                <td>@Cliente.Motivo</td>
+                <td>@Cliente.CreatedAt</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<dialog id="modal2">
+
+    <p id="close_modal2">X</p>
+    <h2>Primera sentencia</h2>
+        <p>
+            SELECT *
+            FROM ATENCION_CLIENTE
+            WHERE FECHA_ALTA 
+            BETWEEN startDate AND endDate;
+        </p>
+        
+       
+
+
+</dialog>
+</div>
+<script>
+    const btnAbrirModal2 = document.querySelector("#open_modal2");
+
+    const btnCerrarModal2 = document.querySelector("#close_modal2");
+
+    const modal2 = document.querySelector("#modal2");
+
+
+
+    btnAbrirModal2.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal2.showModal();
+    })
+
+    btnCerrarModal2.addEventListener("click", () => {
+        modal2.close();
+    })
+
+
+
+
+
+    var tabla = document.getElementById("tablaClientes");
+
+    
+    var filas = tabla.tBodies[0].rows;
+
+    function ordenarTabla(columna) {
+       
+        var datos = [];
+        for (var i = 0; i < filas.length; i++) {
+            var fila = filas[i];
+            var celda = fila.cells[columna];
+            var dato = celda.textContent || celda.innerText;
+            datos.push(dato);
+        }
+
+        
+        datos.sort();
+
+       
+        var indices = [];
+        for (var i = 0; i < filas.length; i++) {
+            indices.push(i);
+        }
+
+       
+        indices.sort(function (a, b) {
+            return datos[a] > datos[b] ? 1 : -1;
+        });
+
+       
+        for (var i = 0; i < indices.length; i++) {
+            tabla.tBodies[0].appendChild(filas[indices[i]]);
+        }
+    }
+
+    
+    var cabeceras = tabla.tHead.rows[0].cells;
+    for (var i = 0; i < cabeceras.length; i++) {
+        cabeceras[i].addEventListener("click", function () {
+            ordenarTabla(this.cellIndex);
+        });
+    }
+</script>
+
+
+

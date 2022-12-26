@@ -1,0 +1,80 @@
+﻿@model Cliente
+@{
+    ViewData["Title"] = "Formulario";
+    Layout = "_Layout";
+}
+
+
+<div class="container">
+    <h3 class="title">FORMULARIO WEB DE ATENCION AL CLIENTE</h3>
+    <form action="POST" class="form">
+
+        <div class="datos">
+            <label for="Nombre">Nombre:</label>
+            <input type="text" name="" id="Nombre">
+        </div>
+        <div class="datos">
+            <label for="Apellidos">Apellidos:</label>
+            <input type="text" name="" id="Apellidos">
+        </div>
+
+        <div class="datos">
+            <label for="TelefonoCelular">Telefono Celular:</label>
+            <input type="text" name="" id="TelefonoCelular">
+        </div>
+
+        <div class="datos">
+            <label for="Email">Email:</label>
+            <input type="text" name="" id="Email">
+        </div>
+
+        <div class="Check">
+            <p>Sexo:</p>
+            <div>
+                <input type="radio" name="gender" value="male" checked>Hombre   <br>
+                <input type="radio" name="gender" value="female">Mujer<br>
+            </div>
+        </div>
+
+        <div class="datos" >
+            <label asp-for="Motivo"></label>
+            
+            @Html.DropDownList(
+            "Motivo", Html.GetEnumSelectList<TiposMotivo>(),
+            "seleccione un Motivo ", new {@class = "form-Drop"}
+            )
+
+        </div>
+
+        
+
+
+
+
+        <button class="formBtn" type="submit" class="boton-enviar" id="open_modal">Enviar</button>
+    </form>
+</div>
+
+
+
+
+
+
+<dialog id="modal">
+
+    <p id="close_modal">X</p>
+    <h2>Primera sentencia</h2>
+    <p>
+        SELECT *
+        FROM ATENCION_CLIENTE
+        WHERE TELEFONO= telefonoCelular AND EXISTS (SELECT 1 FROM  ATENCION_CLIENTE WHERE FECHA_ALTA= CAST(GETDATE() AS DATE) AND (MOTIVO='Incidencia' OR MOTIVO='queja' OR MOTIVO='Reclamacion'));
+    </p>
+    <h2>Segunda sentencia</h2>
+    <p>
+        ALTER TABLE ATENCION_CLIENTE ADD FECHA_ALTA DATE;
+        INSERT INTO table_name (NOMBRE,APELLIDOS,CELULAR, EMAIL,SEXO,MOTIVO,FECHA_ALTA)
+        VALUES (Nombre, Apellidos, TelefonoCelular, Email, Sexo, Motivo, date = CAST(GETDATE() AS DATE));
+    </p>
+
+
+</dialog>
